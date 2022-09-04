@@ -1,6 +1,10 @@
 class Api::ContestsController < ApplicationController
   def index
-    @contest = Contest.order('created_at DESC')
+    @contest = if params[:name] && params[:timings]
+                 Contest.where(name: params[:name], timings: params[:timings])
+               else
+                 Contest.order('created_at DESC')
+               end
     render json: {
       status: 'SUCCESS', message: 'Loaded contests', data: @contest
     }, status: :ok
